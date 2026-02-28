@@ -1,0 +1,7 @@
+header, footer {
+    background-color: rgb(var(--bs-dark-rgb));
+}
+
+.nav-color {
+    color: rgb(255, 255, 255, 0.5);
+}
