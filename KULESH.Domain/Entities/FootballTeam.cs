@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KULESH.Domain.Entities
 {
-    public class FootballTeams
+    public class FootballTeam
     {
         public int Id { get; set; } // id команды
         public string Name { get; set; } // Название команды

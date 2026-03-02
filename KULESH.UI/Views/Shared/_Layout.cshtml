@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/KULESH.UI.styles.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css" />
+
 </head>
 <body>
 
@@ -17,7 +18,8 @@
         <div class="container">
             <!-- Панель навигации -->
             <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                <!-- меню сайта --> @await Component.InvokeAsync("Menu")
+                <!-- меню сайта --> 
+                @await Component.InvokeAsync("Menu")
                 <!-- меню сайта - конец -->
                 <!-- Информация пользователя -->
                 <partial name="_UserInfoPartial" />
@@ -33,7 +35,7 @@
         </main>
     </div>
 
-    <footer>
+    <footer class="border-top footer text-muted">
         <div class="container">
             <div class="navbar navbar-dark navbar-expand-md bg-dark">
                 <div class="navbar-nav ms-auto">
@@ -48,7 +50,7 @@
                     </a>
                 </div>
             </div>
-    <footer class="border-top footer text-muted">
+   
 
         <div class="container">
         </div>

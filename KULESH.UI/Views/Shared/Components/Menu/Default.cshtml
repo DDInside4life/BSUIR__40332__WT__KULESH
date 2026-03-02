@@ -1,6 +1,6 @@
 ﻿@{
-    string controller = ViewData["Controller"]!.ToString();
-    string area = ViewData["Area"]!.ToString();
+    var controller = ViewData["Controller"]!.ToString();
+    var area = ViewData["Area"]!.ToString();
 }
 <a class="navbar-brand @(controller == "home" ? "active" : "")"
    asp-controller="home"
