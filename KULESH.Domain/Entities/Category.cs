@@ -6,8 +6,8 @@ namespace KULESH.Domain.Entities
 {
     public class Category
     {
-        int Id { get; set; }
-        string Name { get; set; }
-        string NormalizedName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string NormalizedName { get; set; }
     }
 }

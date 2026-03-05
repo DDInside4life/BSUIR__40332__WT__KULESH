@@ -1,0 +1,55 @@
+﻿@using KULESH.Domain.Entities
+@model IEnumerable<KULESH.Domain.Entities.FootballTeam>
+
+@{
+    Layout = "_Layout";
+    var currentCategory = ViewData["currentCategory"] ?? "Все";
+}
+
+<h1>Футбольные клубы</h1>
+
+<!-- Category filter dropdown -->
+<div class="dropdown mb-3">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        @currentCategory
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        <li>
+            <a class="dropdown-item" asp-controller="FootballTeam" asp-action="Index">Все</a>
+        </li>
+        @if (ViewBag.Categories != null)
+        {
+            @foreach (var cat in ViewBag.Categories)
+            {
+                <li>
+                    <a class="dropdown-item"
+                           asp-controller="FootballTeam"
+                           asp-action="Index"
+                           asp-route-category="@cat.NormalizedName">
+                        @cat.Name
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+<!-- Team cards -->
+<div class="row">
+    @foreach (var team in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="@team.Image" class="card-img-top d-block mx-auto" alt="@team.Name" style="width:300px; height:300px;">
+                <div class="card-body">
+                    <h5 class="card-title">@team.Name</h5>
+                    <p class="card-text">@team.Description</p>
+                    <p class="card-text"><strong>@team.Points очков</strong></p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

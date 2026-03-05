@@ -1,0 +1,77 @@
+﻿@page
+@using KULESH.Domain.Entities
+@model KULESH.UI.Areas.Admin.Pages.FootballTeams.IndexModel
+
+@{
+    ViewData["Title"] = "Teams - Admin";
+    var categories = ViewData["Categories"] as IEnumerable<Category>;
+    var currentCategory = ViewData["CurrentCategory"] ?? "Все";
+}
+
+<h1>Football Teams – Admin</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Create New
+    </a>
+</p>
+
+<!-- Category filter dropdown -->
+<div class="dropdown mb-3">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        @currentCategory
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        <li>
+            <a class="dropdown-item" asp-page="./Index" asp-route-category="">Все</a>
+        </li>
+        @if (categories != null)
+        {
+            @foreach (var cat in categories)
+            {
+                <li>
+                    <a class="dropdown-item"
+                           asp-page="./Index"
+                           asp-route-category="@cat.NormalizedName">
+                        @cat.Name
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+<!-- Team cards -->
+@if (Model.FootballTeams.Any())
+{
+    <div class="row">
+        @foreach (var team in Model.FootballTeams)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@team.Image" class="card-img-top d-block mx-auto" alt="@team.Name" style="width:300px; height:300px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@team.Name</h5>
+                        <p class="card-text">@team.Description</p>
+                        <p class="card-text"><strong>@team.Points очков</strong></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a asp-page="./Edit" asp-route-id="@team.Id" class="btn btn-sm btn-primary" title="Edit">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a asp-page="./Details" asp-route-id="@team.Id" class="btn btn-sm btn-info" title="Details">
+                            <i class="fa-solid fa-info-circle"></i>
+                        </a>
+                        <a asp-page="./Delete" asp-route-id="@team.Id" class="btn btn-sm btn-danger" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No teams found.</p>
+}

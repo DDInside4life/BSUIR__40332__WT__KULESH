@@ -1,6 +1,9 @@
 using KULESH.UI.Data;
+using KULESH.UI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<ICategoryService, MemoryCategoryService>();
+builder.Services.AddTransient<ITeamService, MemoryTeamService>();
+
+builder.Services.AddScoped<ITeamService, MemoryTeamService>();
+builder.Services.AddScoped<ICategoryService, MemoryCategoryService>();
+
+// temporary item
+builder.Services.AddDbContext<TempContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

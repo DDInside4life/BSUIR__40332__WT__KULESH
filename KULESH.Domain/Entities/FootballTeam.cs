@@ -14,9 +14,7 @@ namespace KULESH.Domain.Entities
 
 
         // Навигационные свойства
-        /// <summary>
-        /// группа блюд (например, супы, напитки и т.д.)
-        /// </summary>
+
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 

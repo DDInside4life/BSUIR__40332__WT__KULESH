@@ -11,11 +11,8 @@
        asp-controller="home" 
        asp-action="index">Лб 1</a>
     <a class="nav-item nav-link
-    @(controller == "product" ? "active" : "")"
-       asp-controller="product" 
+    @(controller == "/FootballTeam" ? "active" : "")"
+       asp-controller="/FootballTeam"
        asp-action="index">Каталог</a>
-    <a class="nav-item nav-link 
-    @(area == "admin" ? "active" : "")"
-       asp-area="admin" 
-       asp-page="/index">Администрирование</a>
+    <a class="nav-item nav-link" asp-area="Admin" asp-page="/FootballTeams/Index">Администрирование</a>
 </div>
