@@ -1,18 +1,16 @@
 ﻿@{
-    var controller = ViewData["Controller"]!.ToString();
-    var area = ViewData["Area"]!.ToString();
+    var controller = (ViewData["Controller"] as string ?? string.Empty).ToLowerInvariant();
+    var area = (ViewData["Area"] as string ?? string.Empty).ToLowerInvariant();
 }
 <a class="navbar-brand @(controller == "home" ? "active" : "")"
-   asp-controller="home"
-   asp-action="index">KULESH</a>
+   asp-controller="Home"
+   asp-action="Index">KULESH</a>
 <div class="navbar-nav">
-    <a class="nav-item nav-link 
-    @(controller == "home" ? "active" : "")"
-       asp-controller="home" 
-       asp-action="index">Лб 1</a>
-    <a class="nav-item nav-link
-    @(controller == "/FootballTeam" ? "active" : "")"
-       asp-controller="/FootballTeam"
-       asp-action="index">Каталог</a>
-    <a class="nav-item nav-link" asp-area="Admin" asp-page="/FootballTeams/Index">Администрирование</a>
+    <a class="nav-item nav-link @(controller == "home" ? "active" : "")"
+       asp-controller="Home"
+       asp-action="Index">Лб 1</a>
+    <a class="nav-item nav-link @(controller == "footballteam" ? "active" : "")"
+       asp-controller="FootballTeam"
+       asp-action="Index">Каталог</a>
+    <a class="nav-item nav-link @(area == "admin" ? "active" : "")" asp-area="Admin" asp-page="/FootballTeams/Index">Администрирование</a>
 </div>
