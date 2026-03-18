@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
@@ -98,6 +100,10 @@ namespace KULESH.UI.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            // Avatar file upload
+            [Display(Name = "Avatar")]
+            public IFormFile Avatar { get; set; }
         }
 
 
@@ -114,6 +120,14 @@ namespace KULESH.UI.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                // If an avatar was uploaded, read it into the user.Avatar property before creating the user
+                if (Input.Avatar != null && Input.Avatar.Length > 0)
+                {
+                    using var ms = new MemoryStream();
+                    await Input.Avatar.CopyToAsync(ms);
+                    user.Avatar = ms.ToArray();
+                }
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

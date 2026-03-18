@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="KULESH.API/KULESH.API.csproj" Id="a6e578b9-52c5-4bf4-88a5-3d09499a4c40" />
   <Project Path="KULESH.Domain/KULESH.Domain.csproj" Id="d2afa333-8af6-4281-8a47-90c204ab2a1e" />
   <Project Path="KULESH.UI/KULESH.UI.csproj" />
 </Solution>

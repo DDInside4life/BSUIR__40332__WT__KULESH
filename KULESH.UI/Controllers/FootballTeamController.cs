@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using KULESH.Domain.Entities;
 using KULESH.Domain.Models;
 using KULESH.UI.Services;
 
 namespace KULESH.UI.Controllers
 {
+    [Authorize]
     public class FootballTeamController(
         ICategoryService categoryService, 
         ITeamService teamService) : Controller

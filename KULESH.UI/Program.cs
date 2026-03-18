@@ -20,8 +20,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
-    // Require confirmed account for sign-in
-    options.SignIn.RequireConfirmedAccount = true;
+    // Do not require confirmed account for sign-in (allow immediate login after registration)
+    options.SignIn.RequireConfirmedAccount = false;
 
     // Allow simple passwords for testing / educational purposes
     options.Password.RequireDigit = false;
@@ -46,11 +46,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddTransient<ICategoryService, MemoryCategoryService>();
-builder.Services.AddTransient<ITeamService, MemoryTeamService>();
-
-builder.Services.AddScoped<ITeamService, MemoryTeamService>();
-builder.Services.AddScoped<ICategoryService, MemoryCategoryService>();
+// Use HTTP clients to communicate with the API project
+builder.Services.AddHttpClient<ITeamService, ApiTeamService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7002");
+});
+builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7002");
+});
 
 // temporary item
 builder.Services.AddDbContext<TempContext>(options =>
