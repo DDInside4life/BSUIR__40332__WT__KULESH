@@ -1,0 +1,67 @@
+﻿@namespace KULESH.Blazor.TeamComponents
+@rendermode InteractiveServer
+@implements IDisposable
+@using KULESH.Blazor.Services
+
+@if (TeamService != null)
+{
+    <div class="btn-group" role="group" aria-label="Pager">
+        <!-- Кнопка Previous -->
+        <button type="button"
+                class="btn btn-outline-primary @(previousEnabled ? "" : "disabled")"
+                @onclick="() => OnPageSelected(TeamService.CurrentPage - 1)">
+            <span aria-hidden="true">&laquo;</span>
+        </button>
+
+        @for (int i = 1; i <= TeamService.TotalPages; i++)
+        {
+            var temp = i;
+            <button type="button"
+                    class="btn btn-outline-primary @(IsActive(temp) ? "active" : "")"
+                    @onclick="() => OnPageSelected(temp)">
+                @temp
+            </button>
+        }
+
+        <!-- Кнопка Next -->
+        <button type="button"
+                class="btn btn-outline-primary @(nextEnabled ? "" : "disabled")"
+                @onclick="() => OnPageSelected(TeamService.CurrentPage + 1)">
+            <span aria-hidden="true">&raquo;</span>
+        </button>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public ITeamService<FootballTeam>? TeamService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (TeamService != null)
+        {
+            TeamService.ListChanged += StateHasChanged;
+        }
+    }
+
+    private bool previousEnabled => TeamService != null && TeamService.CurrentPage > 1;
+    private bool nextEnabled => TeamService != null && TeamService.CurrentPage < TeamService.TotalPages;
+
+    private bool IsActive(int pageNo) => TeamService != null && pageNo == TeamService.CurrentPage;
+
+    private async Task OnPageSelected(int pageNo)
+    {
+        if (TeamService != null)
+        {
+            await TeamService.GetTeams(pageNo);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (TeamService != null)
+        {
+            TeamService.ListChanged -= StateHasChanged;
+        }
+    }
+}

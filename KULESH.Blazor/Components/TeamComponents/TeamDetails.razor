@@ -1,0 +1,22 @@
+﻿@namespace KULESH.Blazor.TeamComponents
+@using KULESH.Domain.Entities
+
+@if (Team != null)
+{
+    <div class="card mt-5" style="width: 18rem;">
+        <img src="@Team.Image" class="card-img-top" alt="@Team.Name">
+        <div class="card-body">
+            <h5 class="card-title">@Team.Name</h5>
+            <p class="card-text">@Team.Description</p>
+            <h4 class="badge bg-info">@Team.Points очков</h4>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public FootballTeam? Team { get; set; }
+
+    [Parameter]
+    public EventCallback<FootballTeam> TeamChanged { get; set; }
+}

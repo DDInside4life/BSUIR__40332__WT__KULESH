@@ -1,0 +1,53 @@
+﻿@namespace KULESH.Blazor.TeamComponents
+@rendermode InteractiveServer
+@implements IDisposable
+@using KULESH.Domain.Entities
+@using KULESH.Blazor.Services
+
+@if (TeamService?.Teams == null || !TeamService.Teams.Any())
+{
+    <p>Загрузка...</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var team in TeamService.Teams)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @team.Name
+                <button class="btn btn-primary btn-sm" @onclick="() => OnTeamSelected(team.Id)">
+                    Подробно
+                </button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    [CascadingParameter]
+    public ITeamService<FootballTeam>? TeamService { get; set; }
+
+    [Parameter]
+    public EventCallback<int> TeamSelected { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (TeamService != null)
+        {
+            TeamService.ListChanged += StateHasChanged;
+        }
+    }
+
+    private async Task OnTeamSelected(int id)
+    {
+        await TeamSelected.InvokeAsync(id);
+    }
+
+    public void Dispose()
+    {
+        if (TeamService != null)
+        {
+            TeamService.ListChanged -= StateHasChanged;
+        }
+    }
+}

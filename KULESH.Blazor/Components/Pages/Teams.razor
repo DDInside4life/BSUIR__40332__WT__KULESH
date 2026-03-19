@@ -1,0 +1,38 @@
+﻿@page "/teams"
+@rendermode InteractiveServer
+@using KULESH.Domain.Entities
+@using KULESH.Blazor.Services
+@using KULESH.Blazor.TeamComponents
+@implements IDisposable
+@inject ITeamService<FootballTeam> TeamService
+
+<CascadingValue Value="TeamService">
+    <TeamsList TeamSelected="ShowDetails" />
+    <Pager />
+</CascadingValue>
+
+<TeamDetails Team="SelectedTeam" />
+
+@code {
+    private FootballTeam? SelectedTeam { get; set; }
+
+    protected override void OnInitialized()
+    {
+        TeamService.ListChanged += StateHasChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TeamService.GetTeams(); // загружаем первую страницу (pageNo=1, pageSize=3)
+    }
+
+    private void ShowDetails(int id)
+    {
+        SelectedTeam = TeamService.Teams.FirstOrDefault(t => t.Id == id);
+    }
+
+    public void Dispose()
+    {
+        TeamService.ListChanged -= StateHasChanged;
+    }
+}
