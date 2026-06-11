@@ -23,7 +23,7 @@ namespace KULESH.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAvatar()
         {
-            byte[] content = null;
+            byte[]? content = null;
             string contentType = "image/png";
 
             if (User?.Identity?.IsAuthenticated == true)
@@ -38,8 +38,9 @@ namespace KULESH.UI.Controllers
 
             if (content == null)
             {
-                var defaultPathSvg = Path.Combine(_env.WebRootPath, "Images", "default-avatar.svg");
-                var defaultPathPng = Path.Combine(_env.WebRootPath, "Images", "default-avatar.png");
+                var webRootPath = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var defaultPathSvg = Path.Combine(webRootPath, "images", "default-avatar.svg");
+                var defaultPathPng = Path.Combine(webRootPath, "images", "default-profile-picture.png");
 
                 if (System.IO.File.Exists(defaultPathSvg))
                 {

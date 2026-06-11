@@ -27,6 +27,7 @@ namespace KULESH.Blazor.Services
                     if (responseData?.Success == true && responseData.Data != null)
                     {
                         var allTeams = responseData.Data;
+                        NormalizeImageUrls(allTeams);
                         _totalPages = (int)Math.Ceiling(allTeams.Count / (double)pageSize);
                         _currentPage = pageNo;
                         _teams = allTeams
@@ -71,5 +72,23 @@ namespace KULESH.Blazor.Services
         public Task<ResponseData<FootballTeam>> CreateTeamAsync(FootballTeam product, IFormFile? formFile) => throw new NotImplementedException();
         public Task UpdateTeamAsync(int id, FootballTeam product, IFormFile? formFile) => throw new NotImplementedException();
         public Task DeleteTeamAsync(int id) => throw new NotImplementedException();
+
+        private void NormalizeImageUrls(IEnumerable<FootballTeam> teams)
+        {
+            if (http.BaseAddress == null)
+            {
+                return;
+            }
+
+            foreach (var team in teams)
+            {
+                if (string.IsNullOrWhiteSpace(team.Image) || Uri.TryCreate(team.Image, UriKind.Absolute, out _))
+                {
+                    continue;
+                }
+
+                team.Image = new Uri(http.BaseAddress, team.Image.TrimStart('/')).ToString();
+            }
+        }
     }
 }

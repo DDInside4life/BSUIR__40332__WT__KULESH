@@ -36,20 +36,29 @@ namespace KULESH.UI.Services
                     return ResponseData<FootballTeam>.Error("Не удалось прочитать ответ API");
                 }
 
+
+                NormalizeImageUrl(createdTeam);
+
                 // 3. Если есть файл, отправляем его
                 if (formFile != null && formFile.Length > 0)
                 {
                     // Создаем multipart-контент
                     using var content = new MultipartFormDataContent();
                     using var streamContent = new StreamContent(formFile.OpenReadStream());
-                    content.Add(streamContent, "image", formFile.FileName); // имя поля "image", как в примере
+                    content.Add(streamContent, "file", formFile.FileName);
 
                     // Отправляем POST на тот же ресурс с ID (предполагаем, что API принимает изображение по ID)
-                    var imageResponse = await _http.PostAsync($"api/FootballTeams/{createdTeam.Id}", content);
+                    var imageResponse = await _http.PostAsync($"api/FootballTeams/{createdTeam.Id}/image", content);
                     if (!imageResponse.IsSuccessStatusCode)
                     {
-                        // Можно вернуть ошибку, но объект уже создан. По заданию, вероятно, нужно сообщить об ошибке.
                         return ResponseData<FootballTeam>.Error($"Объект создан, но не удалось загрузить изображение: {imageResponse.StatusCode}");
+                    }
+
+                    var updatedTeam = await imageResponse.Content.ReadFromJsonAsync<ResponseData<FootballTeam>>();
+                    if (updatedTeam?.Success == true && updatedTeam.Data != null)
+                    {
+                        NormalizeImageUrl(updatedTeam.Data);
+                        return updatedTeam;
                     }
                 }
 
@@ -79,6 +88,7 @@ namespace KULESH.UI.Services
 
                 resp.EnsureSuccessStatusCode();
                 var team = await resp.Content.ReadFromJsonAsync<FootballTeam>();
+                NormalizeImageUrl(team);
                 return ResponseData<FootballTeam>.OK(team!);
             }
             catch (Exception ex)
@@ -107,7 +117,8 @@ namespace KULESH.UI.Services
                 var data = await resp.Content.ReadFromJsonAsync<ResponseData<List<FootballTeam>>>();
                 if (data == null)
                     return ResponseData<List<FootballTeam>>.Error("Invalid response from API");
-
+                
+                //NormalizeImageUrl(team);
                 return data;
             }
             catch (Exception ex)
@@ -120,6 +131,34 @@ namespace KULESH.UI.Services
         {
             var resp = await _http.PutAsJsonAsync($"api/FootballTeams/{id}", product);
             resp.EnsureSuccessStatusCode();
+        }
+
+        private void NormalizeImageUrls(IEnumerable<FootballTeam>? teams)
+        {
+            if (teams == null)
+            {
+                return;
+            }
+
+            foreach (var team in teams)
+            {
+                NormalizeImageUrl(team);
+            }
+        }
+
+        private void NormalizeImageUrl(FootballTeam? team)
+        {
+            if (team == null || string.IsNullOrWhiteSpace(team.Image) || _http.BaseAddress == null)
+            {
+                return;
+            }
+
+            if (Uri.TryCreate(team.Image, UriKind.Absolute, out _))
+            {
+                return;
+            }
+
+            team.Image = new Uri(_http.BaseAddress, team.Image.TrimStart('/')).ToString();
         }
     }
 }

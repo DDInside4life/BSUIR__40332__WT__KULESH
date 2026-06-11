@@ -56,9 +56,9 @@ builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? "https://localhost:7002");
 });
 
-// temporary item
-builder.Services.AddDbContext<TempContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//// temporary item
+//builder.Services.AddDbContext<TempContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -94,4 +94,3 @@ app.MapRazorPages()
 KULESH.UI.Data.DbInit.SeedData(app).GetAwaiter().GetResult();
 
 app.Run();
-
